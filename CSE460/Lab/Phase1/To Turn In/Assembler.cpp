@@ -81,7 +81,7 @@ int Assembler::assemble(fstream& in, fstream& out)
 			instruction = 2;
 			instruction = instruction << 11 | rd << 9 | 1 << 8 | (0xff & constant);
 		}
-		else if (opcode == "addc") {  //not done
+		else if (opcode == "addc") {  
 			str >> rd >> rs;
 			if (rd < 0 || rd > 3)
 				return error;
@@ -90,7 +90,7 @@ int Assembler::assemble(fstream& in, fstream& out)
 			instruction = 3;
 			instruction = instruction << 11 | rd << 9 | rs << 6;
 		}
-		else if (opcode == "addci") { //not done
+		else if (opcode == "addci") { 
 			str >> rd >> constant;
 			if (rd < 0 || rd > 3)
 				return error;
