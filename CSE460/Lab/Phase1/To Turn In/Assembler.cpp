@@ -191,7 +191,7 @@ int Assembler::assemble(fstream& in, fstream& out)
 				return error;
 			instruction = 10;
 			instruction = instruction << 11 | rd << 9;
-        }
+        	}
 		else if (opcode == "shr") {
 		str >> rd;
 		if (rd < 0 || rd > 3)
