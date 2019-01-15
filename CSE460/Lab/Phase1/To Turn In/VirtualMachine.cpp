@@ -64,14 +64,14 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
                 sign2 = (constant&0x80)>>7;
                 // sign extend both operands to perform operation
                 if (sign2) constant |= 0xffffff00;
-                if (r[rd] & 0x8000) r[rd] |= 0xffff0000;
+                if (sign1) r[rd] |= 0xffff0000;
                 r[rd] = r[rd] + constant;
             } else {
                 sign2 = (r[rs]&0x8000)>>15;
                 int temp = r[rs];
                 // sign extend both operands to perform operation
                 if (sign2) temp |= 0xffff0000;
-                if (r[rd] & 0x8000) r[rd] |= 0xffff0000;
+                if (sign1) r[rd] |= 0xffff0000;
                 r[rd] = r[rd] + temp;
             }
 
@@ -95,14 +95,14 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
                 sign2 = (constant&0x80)>>7;
                 // sign extend both operands to perform operation
                 if (sign2) constant |= 0xffffff00;
-                if (r[rd] & 0x8000) r[rd] |= 0xffff0000;
+                if (sign1) r[rd] |= 0xffff0000;
                 r[rd] = r[rd] + constant + sr&0x1;
             } else {
                 sign2 = (r[rs]&0x8000)>>15;
                 int temp = r[rs];
                 // sign extend both operands to perform operation
                 if (sign2) temp |= 0xffff0000;
-                if (r[rd] & 0x8000) r[rd] |= 0xffff0000;
+                if (sign1) r[rd] |= 0xffff0000;
                 r[rd] = r[rd] + temp + sr&0x1;
             }
 
@@ -118,9 +118,92 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 
             // keep it at 16 bits
             r[rd] &= 0xffff;
+        }
+        else if(opcode == 4){ //sub subi
+            int sign1 = (r[rd]&0x8000)>>15;
+            int sign2;
+            if (i) {
+                sign2 = (constant&0x80)>>7;
+                // sign extend both operands to perform operation
+                if (sign2) constant |= 0xffffff00;
+                if (sign1) r[rd] |= 0xffff0000;
+                r[rd] = r[rd] - constant;
+            } else {
+                sign2 = (r[rs]&0x8000)>>15;
+                int temp = r[rs];
+                // sign extend both operands to perform operation
+                if (sign2) temp |= 0xffff0000;
+                if (sign1) r[rd] |= 0xffff0000;
+                r[rd] = r[rd] - temp;
+            }
+        }
+        else if(opcode == 5){ //subc subci
+            int sign1 = (r[rd]&0x8000)>>15;
+            int sign2;
+            if (i) {
+                sign2 = (constant&0x80)>>7;
+                // sign extend both operands to perform operation
+                if (sign2) constant |= 0xffffff00;
+                if (sign1) r[rd] |= 0xffff0000;
+                r[rd] = r[rd] - constant - sr&0x1;
+            } else {
+                sign2 = (r[rs]&0x8000)>>15;
+                int temp = r[rs];
+                // sign extend both operands to perform operation
+                if (sign2) temp |= 0xffff0000;
+                if (sign1) r[rd] |= 0xffff0000;
+                r[rd] = r[rd] - temp - sr&0x1;
+            }   
+        }
+        else if(opcode == 6){ // and andi
+            int sign1 = (r[rd]&0x8000)>>15;
+            int sign2;
+            if(i){
+                sign2 = (constant&0x80)>>7;
+                if (sign2) constant |= 0xffffff00;
+                if (sign1) r[rd] |= 0xffff0000;
+                r[rd] &= r[rs];
+            } else {
+              sign2 = (r[rs]&0x8000)>>15;
+              int temp = r[rs];
+              if (sign2) temp |= 0xffff0000;
+              if (sign1) r[rd] |= 0xffff0000;
+              r[rd] &= temp;
+            }
+            
+        }
+        else if(opcode == 7){ //xor xori
+            int sign1 = (r[rd]&0x8000)>>15;
+            int sign2;
+            if(i){
+                sign2 = (constant&0x80)>>7;
+                if (sign2) constant |= 0xffffff00;
+                if (sign1) r[rd] |= 0xffff0000;
+                r[rd] ^= r[rs];
+            } else {
+              sign2 = (r[rs]&0x8000)>>15;
+              int temp = r[rs];
+              if (sign2) temp |= 0xffff0000;
+              if (sign1) r[rd] |= 0xffff0000;
+              r[rd] ^= temp;
+            }
+        }
+        else if(opcode == 8){ //comp
+            r[rd] = ~r[rd];
+        }
+        else if(opcode == 9){ //shl
+            r[rd] = r[rd]<<1;
+        }
+        else if(opcode == 10){ //shla
+            int sign1 = (r[rd]&0x8000)>>15;
+            int temp = r[rd]<<1;
+            if(sign1)
+                r[rd] = temp | sign1<<15;
+            else
+                r[rd] = temp &0x7fff;
+        }
 
-...
-        } else {
+         else {
             cout << "Bad opcode = " << opcode << endl;
             exit(3);
         }
