@@ -1,4 +1,4 @@
-                             
+	 	 	 	 	 	
 Dustin Badillo
 004715242
 Homework 1
@@ -6,38 +6,44 @@ Exercises 1.6, 1.12, 1.19, 1.20, 1.27
 
 
 Exercises 1.6
-    Which of the following instructions should be privileged?
-    a.Set value of timer.
-b.Read the clock.
-c.Clear memory.
-d.Issue a trap instruction.
-e.Turn off interrupts.
-f.Modify entries in device-status table.
-g.Switch from user to kernel mode.
-h.Access I/O device.
+	Which of the following instructions should be privileged?
+	a.Set value of timer.
+  b.Read the clock.
+  c.Clear memory.
+  d.Issue a trap instruction.
+  e.Turn off interrupts.
+  f.Modify entries in device-status table.
+  g.Switch from user to kernel mode.
+  h.Access I/O device.
 
 
 1.12
-in a multiprogramming and time-sharing environment, several users share the system simultaneously. This situation can result in various security problems.
+In a multiprogramming and time-sharing environment, several users share the system simultaneously. This situation can result in various security problems.
 What are two such problems?
 Theft of Service: unauthorized use of a system, and Denial of Service: preventing legitimate users from using the system
+
 Can we ensure the same degree of security in a time-shared machine as in a dedicated machine? Explain your answer.
 yes , as long as the operating system can properly manage the access to memory, data, and cpu time. Without proper access to memory any user will be able to the memory of other processes while improper time management will allow any process to take control of the cpu without giving back control.
 
 1.19
 What is the purpose of interrupts? How does an interrupt differ from a trap? Can traps be generated intentionally by a user program? If so, for what purpose?
 
-The purpose of interrupts is to request for service coming from an I/0 device, user or processes. This differs from a trap because traps are used to 
-
+The purpose of interrupts is to stop what the cpu is doing and immediately transfer execution to a fixed location. A trap is a software generated interrupt that is a specific request from a user program that an operating system service wants to be performed. This is different from a regular interrupt since traps are requests while regular interrupts always are executed. Traps are generated intentionally by user programs in order to have have the resources to execute.
+ 
 1.20
-    Direct memory access is used for high-speed I/O devices in order to avoid increasing the CPU’s execution load.
+	Direct memory access is used for high-speed I/O devices in order to avoid increasing the CPU’s execution load.
 
 How does the CPU interface with the device to coordinate the transfer?
- How does the CPU know when the memory operations are complete?
-The CPU is allowed to execute other programs while the DMA controller is transferring data. Does this process interfere with the execution of the user programs? If so, describe what forms of interference are caused.
-
-1.27
-    Describe some of the challenges of designing operating systems for mobile devices compared with designing operating systems for traditional PCs.
-
+		The  OS has a specific device driver for each device controller. The device device driver loads registers inside the device controller to which the device controller examines in order to know what action to make. The controller starts transfering the data from the device to its local buffer. When the transfer is done the device controller informs the device driver using an interrupt that the operation is done. 
     
+How does the CPU know when the memory operations are complete?
+There is one interrupt that is generated per block to tell the cpu
+
+The CPU is allowed to execute other programs while the DMA controller is transferring data. Does this process interfere with the execution of the user programs? If so, describe what forms of interference are caused.
+	There are no interference with the execution of user programs besides the interrupts to the cpu when the controller is done which can possibly suspend the users process
+  
+1.27
+	Describe some of the challenges of designing operating systems for mobile devices compared with designing operating systems for traditional PCs.
+	The memory capacity and processing speed of mobile devices are much more limited than the pc requiring more efficiency with memory allocation. Smaller and slower processors found in phones offer fewer processing cores than traditional full size computers. The portability of mobile devices requires the operating system to find a balance between cpu performance and battery life.
+	
 
