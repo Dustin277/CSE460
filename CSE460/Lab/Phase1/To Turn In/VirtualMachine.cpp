@@ -188,7 +188,7 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
               r[rd] ^= temp;
             }
         }
-        else if(opcode == 8){ //comp
+        else if(opcode == 8){ //compl
             r[rd] = ~r[rd];
         }
         else if(opcode == 9){ //shl
@@ -201,6 +201,63 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
                 r[rd] = temp | sign1<<15;
             else
                 r[rd] = temp &0x7fff;
+        }
+        else if(opcode == 11){ //shr
+            r[rd] = r[rd]>>1;
+        }
+        else if(opcode == 12){ //shra
+            int sign1 = (r[rd]&0x8000)>>15;
+            int temp = r[rd]>>1;
+            if(sign1)
+                r[rd] = temp | sign1<<15;
+            else
+                r[rd] = temp &0x7fff;
+        }
+        else if(opcode == 13){ //compr compi
+            sr &= 0xffffffe1;
+            if(i){
+                if (r[rd]<constant) sr |= 0x8;
+                if (r[rd]==constant) sr |= 0x4;
+                if (r[rd]>constant) sr |= 0x2;
+            }
+            else{
+                if (r[rd]<r[rs]) sr |= 0x8;
+                if (r[rd]==r[rs]) sr |= 04;
+                if (r[rd]>r[rs]) sr |= 02;
+            }
+            
+        }
+        else if(opcode == 14){ //getstat
+            r[rd] = sr;
+        }
+        else if(opcode == 15){ //putstat
+            sr = r[rd];
+        }
+        else if(opcode == 16){ //jump
+            pc = addr;
+        }
+        else if(opcode == 17){ //jumpl
+            if(sr&0x8 = 8)      //checks 4th bit on sr
+                pc = addr;
+        }
+        else if(opcode == 18){ //jumpe
+            if(sr&0x4 = 4)      //checks 3rd bit on sr
+                pc = addr;
+        }
+        else if(opcode == 19){ //jumpg
+            if(sr&0x2 = 2)      //checks 2nd bit on sr
+                pc = addr;
+        }
+        else if(opcode == 20){  //call (sp is decremented by 6 as the values of pc, r[0]-r[3], and sr in the VM are pushed on to stack)
+            mem[--sp] = pc;     //first sp be decremented 
+            for (j=0; j<4; j++)
+                mem[--sp] = r[j];   //decrementing from r[0]-r[3]
+            mem[--sp] = sr;         //dec for sr
+            pc = addr;          
+            clock += 4;         //Each call instructions take 4 clock ticks to execute
+        }
+        else if(opcode ==21){ //return
+            
         }
 
          else {
