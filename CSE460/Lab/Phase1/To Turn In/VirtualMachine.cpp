@@ -271,7 +271,7 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
         else if(opcode == 24){  //halt
             return;
         }
-        else if(opcode == 25){
+        else if(opcode == 25){  //noop
             //nothing
         }
 
