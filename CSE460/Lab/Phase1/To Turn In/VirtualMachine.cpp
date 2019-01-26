@@ -256,8 +256,23 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
             pc = addr;          
             clock += 4;         //Each call instructions take 4 clock ticks to execute
         }
-        else if(opcode ==21){ //return
-            
+        else if(opcode == 21){ //return
+            sr = mem[++sp];     //first sp be inccremented 
+            for (j=0; j<4; j++)
+                r[j] = mem[++sp];   //incrementing from r[0]-r[3]
+            clock += 4;         //Each call instructions take 4 clock ticks to execute
+        }
+        else if(opcode == 22){  //read
+            in >> r[rd];        // reads from in using ">>" stream buffer
+        }
+        else if(opcode == 23){  //write
+            out << r[rd] << endl;   //writes out from rd then n/
+        }
+        else if(opcode == 24){  //halt
+            return;
+        }
+        else if(opcode == 25){
+            //nothing
         }
 
          else {
