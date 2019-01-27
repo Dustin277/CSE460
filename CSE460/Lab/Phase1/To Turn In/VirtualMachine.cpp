@@ -237,15 +237,15 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
             pc = addr;
         }
         else if(opcode == 17){ //jumpl
-            if(sr&0x8 = 8)      //checks 4th bit on sr
+            if(sr&0x8 == 8)      //checks 4th bit on sr
                 pc = addr;
         }
         else if(opcode == 18){ //jumpe
-            if(sr&0x4 = 4)      //checks 3rd bit on sr
+            if(sr&0x4 == 4)      //checks 3rd bit on sr
                 pc = addr;
         }
         else if(opcode == 19){ //jumpg
-            if(sr&0x2 = 2)      //checks 2nd bit on sr
+            if(sr&0x2 == 2)      //checks 2nd bit on sr
                 pc = addr;
         }
         else if(opcode == 20){  //call (sp is decremented by 6 as the values of pc, r[0]-r[3], and sr in the VM are pushed on to stack)
