@@ -105,7 +105,7 @@ int Assembler::assemble(fstream& in, fstream& out)
 				return error;
 			if (rs < 0 || rs < 3)
 				return error;
-			instruction = 4
+			instruction = 4;
 				instruction = instruction << 11 | rd << 9 | rs << 6;
 		}
 		else if (opcode == "subi") {
