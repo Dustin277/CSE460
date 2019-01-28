@@ -150,7 +150,7 @@ int Assembler::assemble(fstream& in, fstream& out)
 				return error;
 			if (constant < -128 || constant > 127)
 				return error;
-				instruction = 6;
+			instruction = 6;
 			instruction = instruction << 11 | rd << 9 | 1 << 8 | (0xff & constant);
 		}
 		else if (opcode == "xor") {
@@ -193,120 +193,120 @@ int Assembler::assemble(fstream& in, fstream& out)
 			instruction = instruction << 11 | rd << 9;
         	}
 		else if (opcode == "shr") {
-		str >> rd;
-		if (rd < 0 || rd > 3)
-			return error;
-		instruction = 11;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 11;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "shra") {
-		str >> rd;
-		if (rd < 0 || rd > 3)
-			return error;
-		instruction = 12;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 12;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "compr") {
-		str >> rd >> rs;
-		if (rd < 0 || rd > 3)
-			return error;
-		if (rs < 0 || rs > 3)
-			return error;
-		instruction = 13;
-		instruction = instruction << 11 | rd << 9 | rs << 6;
+			str >> rd >> rs;
+			if (rd < 0 || rd > 3)
+				return error;
+			if (rs < 0 || rs > 3)
+				return error;
+			instruction = 13;
+			instruction = instruction << 11 | rd << 9 | rs << 6;
 		}
 		else if (opcode == "compri") {
-		str >> rd >> constant;
-		if (rd < 0 || rd > 3)
-			return error;
-		if (constant < -128 || constant > 127)
-			return error;
-		instruction = 13;
-		instruction = instruction << 11 | rd << 9 | (0xff & constant);
+			str >> rd >> constant;
+			if (rd < 0 || rd > 3)
+				return error;
+			if (constant < -128 || constant > 127)
+				return error;
+			instruction = 13;
+			instruction = instruction << 11 | rd << 9 | (0xff & constant);
 		}
 		else if (opcode == "getstat") {
-		str >> rd;
-		if (rd < 0 || rd > 3)
-			return error;
-		instruction = 14;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 14;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "putstat") {
-		str >> rd;
-		if (rd < 0 || rd > 3)
-			return error;
-		instruction = 15;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 15;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "jump") {
-		str >> addr;
-		if (addr < 0 || addr > 255)
-			return error;
-		instruction = 16;
-		instruction = instruction << 11 | addr;
+			str >> addr;
+			if (addr < 0 || addr > 255)
+				return error;
+			instruction = 16;
+			instruction = instruction << 11 | addr;
 		}
 		else if (opcode == "jumpl") {
-		str >> addr;
-		if (addr < 0 || addr > 255)
-			return error;
-		instruction = 17;
-		instruction = instruction << 11 | addr;
+			str >> addr;
+			if (addr < 0 || addr > 255)
+				return error;
+			instruction = 17;
+			instruction = instruction << 11 | addr;
 		}
 		else if (opcode == "jumpe") {
-		str >> addr;
-		if (addr < 0 || addr > 255)
-			return error;
-		instruction = 18;
-		instruction = instruction << 11 | addr;
+			str >> addr;
+			if (addr < 0 || addr > 255)
+				return error;
+			instruction = 18;
+			instruction = instruction << 11 | addr;
 		}
 		else if (opcode == "jumpg") {
-		str >> addr;
-		if (addr < 0 || addr > 255)
-			return error;
-		instruction = 19;
-		instruction = instruction << 11 | addr;
+			str >> addr;
+			if (addr < 0 || addr > 255)
+				return error;
+			instruction = 19;
+			instruction = instruction << 11 | addr;
 		}
 		else if (opcode == "call") {
-		str >> addr;
-		if (addr < 0 || addr > 255)
-			return error;
-		instruction = 20;
-		instruction = instruction << 11 | addr;
+			str >> addr;
+			if (addr < 0 || addr > 255)
+				return error;
+			instruction = 20;
+			instruction = instruction << 11 | addr;
 		}
 		else if (opcode == "return") {
-		str >> rd;
-		if (rd > 0 || rd < 3)
-			return error;
-		instruction = 21;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 21;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "read") {
-		str >> rd;
-		if (rd > 0 || rd < 3)
-			return error;
-		instruction = 22;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 22;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "write") {
-		str >> rd;
-		if (rd > 0 || rd < 3)
-			return error;
-		instruction = 23;
-		instruction = instruction << 11 | rd << 9;
+			str >> rd;
+			if (rd < 0 || rd > 3)
+				return error;
+			instruction = 23;
+			instruction = instruction << 11 | rd << 9;
 		}
 		else if (opcode == "halt") {
-		instruction = 24;
-		instruction = instruction << 11;
+			instruction = 24;
+			instruction = instruction << 11;
 		}
 		else if (opcode == "noop") {
-				instruction = 25;
-				instruction = instruction<<11;
+			instruction = 25;
+			instruction = instruction<<11;
 
-			} else
-				return error;
+		} else
+			return error;
 
-			out << setfill('0') << setw(5) << instruction << endl;
-			getline(in, line);
+		out << setfill('0') << setw(5) << instruction << endl;
+		getline(in, line);
 	}
-	return success;
+return success;
 } // assemble
