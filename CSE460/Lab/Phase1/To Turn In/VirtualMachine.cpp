@@ -264,9 +264,11 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
         }
         else if(opcode == 22){  //read
             in >> r[rd];        // reads from in using ">>" stream buffer
+            clock+=28;
         }
         else if(opcode == 23){  //write
-            out << r[rd] << endl;   //writes out from rd then n/
+            out << r[rd];   //writes out from rd then n/
+            clock+=28;
         }
         else if(opcode == 24){  //halt
             return;
