@@ -1,3 +1,16 @@
+/*****************************************************************************
+Dustin Badillo, Bryan Soriano
+Jan 28, 2019
+CSE 460
+Kay Zemoudeh 
+VirtualMachine.cpp
+PHASE1
+
+This file it is getting the integer created by the assembler and executing the 
+correct function stated in the assembly code. the begining of the while loop 
+initalizes the sr, sp amd pc then checks the first part of the assembler integer 
+for the opcode inside the switch statement. 
+******************************************************************************/
 #include <iostream>
 #include <stdio.h>
 #include <string>
