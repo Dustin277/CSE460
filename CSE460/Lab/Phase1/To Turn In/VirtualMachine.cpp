@@ -291,7 +291,7 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 			clock += 27;
 		}
 		else if (opcode == 23) {  //write
-			//sign ext 32 bits to get negative numbers
+			//sign ext 32 bits to output negative numbers
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			if (sign1) r[rd] |= 0xffff0000;
 			
