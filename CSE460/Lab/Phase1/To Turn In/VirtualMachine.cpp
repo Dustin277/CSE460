@@ -9,7 +9,7 @@ PHASE1
 This file it is getting the integer created by the assembler and executing the 
 correct function stated in the assembly code. the begining of the while loop 
 initalizes the sr, sp amd pc then checks the first part of the assembler integer 
-for the opcode inside the switch statement. 
+for the opcode inside the nested ifs. 
 ******************************************************************************/
 #include <iostream>
 #include <stdio.h>
@@ -28,7 +28,7 @@ int VirtualMachine::get_clock()
 
 void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 {
-	const int debug = false;
+	const int debug = true;
 	int opcode, rd, i, rs, constant, addr, j;
 
 	base = 0;
@@ -277,26 +277,29 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				mem[--sp] = r[j];   //decrementing from r[0]-r[3]
 			mem[--sp] = sr;         //dec for sr
 			pc = addr;
-			clock += 4;         //Each call instructions take 4 clock ticks to execute
+			clock += 3;         //Each call instructions take 4 clock ticks to execute
 		}
 		else if (opcode == 21) { //return
-			sr = mem[++sp];     //first sp be inccremented 
+			sr = mem[sp++];     //first sp be inccremented 
 			for (j = 0; j < 4; j++)
-				r[j] = mem[++sp];   //incrementing from r[0]-r[3]
-			clock += 4;         //Each call instructions take 4 clock ticks to execute
+				r[j] = mem[sp++];   //incrementing from r[0]-r[3]
+			pc = mem[sp++];
+			clock += 3;         //Each call instructions take 4 clock ticks to execute
 		}
 		else if (opcode == 22) {  //read
 			in >> r[rd];        // reads from in using ">>" stream buffer
-			clock += 28;
+			clock += 27;
 		}
 		else if (opcode == 23) {  //write
+			//sign ext 32 bits
 			out << r[rd] << endl;   //writes out from rd then n/
-			clock += 28;
+			clock += 27;
 		}
 		else if (opcode == 24) {  //halt
 			return;
 		}
 		else if (opcode == 25) {  //noop
+			return;
 			//nothing
 		}
 
