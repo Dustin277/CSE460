@@ -1,3 +1,14 @@
+/*****************************************************************************
+Dustin Badillo, Bryan Soriano
+Jan 28, 2019
+CSE 460
+Kay Zemoudeh 
+VirtualMachine.h
+PHASE1
+
+In this file it contains the size of the memory as the integers being translated
+by the VirtualMachine.cpp file.
+******************************************************************************/
 #ifndef VIRTUALMACHINE_H
 #define VIRTUALMACHINE_H
 
