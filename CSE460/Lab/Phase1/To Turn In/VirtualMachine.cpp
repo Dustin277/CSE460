@@ -292,6 +292,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 		}
 		else if (opcode == 23) {  //write
 			//sign ext 32 bits
+			int sign1 = (r[rd] & 0x8000) >> 15;
+			if (sign1) r[rd] |= 0xffff0000;
+			
 			out << r[rd] << endl;   //writes out from rd then n/
 			clock += 27;
 		}
