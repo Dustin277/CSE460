@@ -5,3 +5,5 @@ to run phase 1
 4.to change input edit prog.in file
 5. the output will be inside the .out file
 6. same process for other ".s" files
+
+**so far our fact.s (factorial) does not work, "opcode error = 31"**
