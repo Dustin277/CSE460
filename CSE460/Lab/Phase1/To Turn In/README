@@ -1,0 +1,6 @@
+to run phase 1
+1. download all files into one folder
+2. inside terminal type "make" to run the makefile
+3. inside terminal type "./os prog.s" to change input edit prog.in
+4. the output will be inside the .out file
+5. same process for other ".s" files
