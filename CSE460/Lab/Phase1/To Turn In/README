@@ -2,7 +2,7 @@ to run phase 1
 1. download all files into one folder
 2. inside terminal type "make" to run the makefile
 3. inside terminal type "./os prog.s" (.s files are assembly code files)
-4.to change input edit prog.in file
+4. to change input edit prog.in file (input files are ".in")
 5. the output will be inside the .out file
 6. same process for other ".s" files
 
