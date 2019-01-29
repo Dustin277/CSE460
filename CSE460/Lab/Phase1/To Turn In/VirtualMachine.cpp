@@ -28,7 +28,7 @@ int VirtualMachine::get_clock()
 
 void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 {
-	const int debug = true;
+	const int debug = false;
 	int opcode, rd, i, rs, constant, addr, j;
 
 	base = 0;
