@@ -2,14 +2,14 @@
 Dustin Badillo, Bryan Soriano
 Jan 28, 2019
 CSE 460
-Kay Zemoudeh 
+Kay Zemoudeh
 VirtualMachine.cpp
 PHASE1
 
-This file it is getting the integer created by the assembler and executing the 
-correct function stated in the assembly code. the begining of the while loop 
-initalizes the sr, sp amd pc then checks the first part of the assembler integer 
-for the opcode inside the nested ifs. 
+This file it is getting the integer created by the assembler and executing the
+correct function stated in the assembly code. the begining of the while loop
+initalizes the sr, sp amd pc then checks the first part of the assembler integer
+for the opcode inside the nested ifs.
 ******************************************************************************/
 #include <iostream>
 #include <stdio.h>
@@ -49,7 +49,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 
 		clock++;
 
-		if (opcode == 0) { /* load loadi */
+		switch (opcode) {
+
+		case 0: { /* load loadi */
 			if (i) {
 				if (constant & 0x80) constant |= 0xff00;
 				r[rd] = constant;
@@ -62,18 +64,18 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				r[rd] = mem[addr];
 				clock += 3;
 			}
-
+			break;
 		}
-		else if (opcode == 1) { /* store */
+		case 1: { /* store */
 			if (addr >= limit) {
 				out << "Out of bound error.\n";
 				return;
 			}
 			mem[addr] = r[rd];
 			clock += 3;
-
+			break;
 		}
-		else if (opcode == 2) { /* add addi */
+		case 2: { /* add addi */
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int sign2;
 			if (i) {
@@ -104,9 +106,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 
 			// keep it at 16 bits
 			r[rd] &= 0xffff;
-
+			break;
 		}
-		else if (opcode == 3) { /* addc addci */
+		case 3: { /* addc addci */
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int sign2;
 			if (i) {
@@ -137,8 +139,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 
 			// keep it at 16 bits
 			r[rd] &= 0xffff;
+			break;
 		}
-		else if (opcode == 4) { //sub subi
+		case 4: { //sub subi
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int sign2;
 			if (i) {
@@ -156,8 +159,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				if (sign1) r[rd] |= 0xffff0000;
 				r[rd] = r[rd] - temp;
 			}
+			break;
 		}
-		else if (opcode == 5) { //subc subci
+		case 5: { //subc subci
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int sign2;
 			if (i) {
@@ -175,8 +179,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				if (sign1) r[rd] |= 0xffff0000;
 				r[rd] = r[rd] - temp - sr & 0x1;
 			}
+			break;
 		}
-		else if (opcode == 6) { // and andi
+		case 6: { // and andi
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int sign2;
 			if (i) {
@@ -192,9 +197,9 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				if (sign1) r[rd] |= 0xffff0000;
 				r[rd] &= temp;
 			}
-
+			break;
 		}
-		else if (opcode == 7) { //xor xori
+		case 7: { //xor xori
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int sign2;
 			if (i) {
@@ -210,33 +215,39 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				if (sign1) r[rd] |= 0xffff0000;
 				r[rd] ^= temp;
 			}
+			break;
 		}
-		else if (opcode == 8) { //compl
+		case 8: { //compl
 			r[rd] = ~r[rd];
+			break;
 		}
-		else if (opcode == 9) { //shl
+		case 9: { //shl
 			r[rd] = r[rd] << 1;
+			break;
 		}
-		else if (opcode == 10) { //shla
+		case 10: { //shla
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int temp = r[rd] << 1;
 			if (sign1)
 				r[rd] = temp | sign1 << 15;
 			else
 				r[rd] = temp & 0x7fff;
+			break;
 		}
-		else if (opcode == 11) { //shr
+		case 11: { //shr
 			r[rd] = r[rd] >> 1;
+			break;
 		}
-		else if (opcode == 12) { //shra
+		case 12: { //shra
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			int temp = r[rd] >> 1;
 			if (sign1)
 				r[rd] = temp | sign1 << 15;
 			else
 				r[rd] = temp & 0x7fff;
+			break;
 		}
-		else if (opcode == 13) { //compr compi
+		case 13: { //compr compi
 			sr &= 0xffffffe1;
 			if (i) {
 				if (r[rd] < constant) sr |= 0x8;
@@ -248,82 +259,95 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				if (r[rd] == r[rs]) sr |= 04;
 				if (r[rd] > r[rs]) sr |= 02;
 			}
-
+			break;
 		}
-		else if (opcode == 14) { //getstat
+		case 14: { //getstat
 			r[rd] = sr;
+			break;
 		}
-		else if (opcode == 15) { //putstat
+		case 15: { //putstat
 			sr = r[rd];
+			break;
 		}
-		else if (opcode == 16) { //jump
+		case 16: { //jump
 			pc = addr;
+			break;
 		}
-		else if (opcode == 17) { //jumpl
+		case 17: { //jumpl
 			if (sr & 0x8 == 8)      //checks 4th bit on sr
 				pc = addr;
+			break;
 		}
-		else if (opcode == 18) { //jumpe
+		case 18: { //jumpe
 			if (sr & 0x4 == 4)      //checks 3rd bit on sr
 				pc = addr;
+			break;
 		}
-		else if (opcode == 19) { //jumpg
+		case 19: { //jumpg
 			if (sr & 0x2 == 2)      //checks 2nd bit on sr
 				pc = addr;
+			break;
 		}
-		else if (opcode == 20) {  //call (sp is decremented by 6 as the values of pc, r[0]-r[3], and sr in the VM are pushed on to stack)
+		case 20: {  //call (sp is decremented by 6 as the values of pc, r[0]-r[3], and sr in the VM are pushed on to stack)
 			mem[--sp] = pc;     //first sp be decremented 
 			for (j = 0; j < 4; j++)
 				mem[--sp] = r[j];   //decrementing from r[0]-r[3]
 			mem[--sp] = sr;         //dec for sr
 			pc = addr;
 			clock += 3;         //Each call instructions take 4 clock ticks to execute
+			break;
 		}
-		else if (opcode == 21) { //return
+		case 21: { //return
 			sr = mem[sp++];     //first sp be inccremented 
 			for (j = 0; j < 4; j++)
 				r[j] = mem[sp++];   //incrementing from r[0]-r[3]
 			pc = mem[sp++];
 			clock += 3;         //Each call instructions take 4 clock ticks to execute
+			break;
 		}
-		else if (opcode == 22) {  //read
+		case 22: {  //read
 			in >> r[rd];        // reads from in using ">>" stream buffer
 			clock += 27;
+			break;
 		}
-		else if (opcode == 23) {  //write
-			//sign ext 32 bits to output negative numbers
+		case 23: {  //write
+								  //sign ext 32 bits to output negative numbers
 			int sign1 = (r[rd] & 0x8000) >> 15;
 			if (sign1) r[rd] |= 0xffff0000;
-			
+
 			out << r[rd] << endl;   //writes out from rd then n/
 			clock += 27;
+			break;
 		}
-		else if (opcode == 24) {  //halt
+		case 24: {  //halt
 			return;
+			break;
 		}
-		else if (opcode == 25) {  //noop
+		case 25: {  //noop
 			return;
 			//nothing
+			break;
 		}
-
-		else {
+		default: {
 			cout << "Bad opcode = " << opcode << endl;
 			exit(3);
+			break;
 		}
 
+				 if (debug) {
+					 printf("ir=%d op=%d rd=%d i=%d rs=%d const=%d addr=%d\n", ir, opcode, rd, i, rs, constant, addr);
+					 printf("r[0]=%d r[1]=%d r[2]=%d r[3]=%d pc=%d sr=%d sp=%d clock=%d\n\n", r[0], r[1], r[2], r[3], pc, sr, sp, clock);
+					 //char c;
+					 //cin>>c;
+				 }
+		}
+		
 		if (debug) {
-			printf("ir=%d op=%d rd=%d i=%d rs=%d const=%d addr=%d\n", ir, opcode, rd, i, rs, constant, addr);
-			printf("r[0]=%d r[1]=%d r[2]=%d r[3]=%d pc=%d sr=%d sp=%d clock=%d\n\n", r[0], r[1], r[2], r[3], pc, sr, sp, clock);
-			//char c;
-			//cin>>c;
+			for (j = 0; j < limit; j++) {
+				printf("%8d", mem[j]);
+				if ((j % 8) == 7) printf("\n");
+			}
+			cout << endl;
 		}
-	}
-
-	if (debug) {
-		for (j = 0; j < limit; j++) {
-			printf("%8d", mem[j]);
-			if ((j % 8) == 7) printf("\n");
-		}
-		cout << endl;
 	}
 } /* main */
