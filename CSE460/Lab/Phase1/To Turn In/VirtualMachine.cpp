@@ -319,15 +319,13 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 			clock += 27;
 			break;
 		}
-		case 24: {  //halt
+		case 24: //halt
 			return;
 			break;
-		}
-		case 25: {  //noop
-			return;
+		
+		case 25: //noop
 			//nothing
-			break;
-		}
+		
 		default: {
 			cout << "Bad opcode = " << opcode << endl;
 			exit(3);
