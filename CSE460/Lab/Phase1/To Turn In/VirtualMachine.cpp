@@ -278,10 +278,10 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				clock += 4;         //Each call instructions take 4 clock ticks to execute
 				break;
 			case 21: //return
-				sr = mem[++sp];     //first sp be inccremented 
+				sr = mem[sp++];     //first sp be inccremented 
 				for (j = 0; j < 4; j++)
-					r[j] = mem[++sp];   //incrementing from r[0]-r[3]
-				pc = mem[++sp];
+					r[j] = mem[sp++];   //incrementing from r[0]-r[3]
+				pc = mem[sp++];
 				clock += 4;         //Each call instructions take 4 clock ticks to execute
 				break;
 			case 22: //read
