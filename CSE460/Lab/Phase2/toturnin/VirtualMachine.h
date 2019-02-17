@@ -2,7 +2,7 @@
 Dustin Badillo, Bryan Soriano
 Jan 28, 2019
 CSE 460
-Kay Zemoudeh 
+Kay Zemoudeh
 VirtualMachine.h
 PHASE1
 
@@ -18,20 +18,21 @@ by the VirtualMachine.cpp file.
 using namespace std;
 
 class VirtualMachine {
-    int msize;
-    int rsize;
-    int pc, ir, sr, sp, clock;
-    vector<int> mem;
-    vector<int> r;
-    int base, limit;
+	int msize;
+	int rsize;
+	int pc, ir, sr, sp, clock;
+	vector<int> mem;
+	vector<int> r;
+	int base, limit;
 public:
-    VirtualMachine(): msize(256), rsize(4), clock(0) 
-    { 
-        mem = vector<int>(msize); 
-        r = vector<int>(rsize); 
-    }
-    void run(fstream&, fstream&, fstream&);
-    int get_clock();
+	VirtualMachine() : msize(256), rsize(4), clock(0)
+	{
+		mem = vector<int>(msize);
+		r = vector<int>(rsize);
+	}
+	friend class OS;
+	void run(int, fstream&, fstream&);
+	int get_clock();
 }; // VirtualMachine
 
 #endif
