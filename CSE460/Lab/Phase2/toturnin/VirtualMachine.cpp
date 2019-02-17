@@ -1,14 +1,17 @@
 /*****************************************************************************
 Dustin Badillo, Bryan Soriano
-Jan 28, 2019
+Feb 18, 2019
 CSE 460
 Kay Zemoudeh
 VirtualMachine.cpp
-PHASE1
+PHASE2
 This file it is getting the integer created by the assembler and executing the
 correct function stated in the assembly code. the begining of the while loop
 initalizes the sr, sp amd pc then checks the first part of the assembler integer
-for the opcode inside the nested ifs.
+for the opcode inside a swtich statement. Changes made for phase 2 are separating
+the loading of the opcode from the run to a load function and adding a base to the
+address inside load,store,call, and jump. Lastly an interrupt was included to stop 
+the VM from executing when timeslice was encountered
 ******************************************************************************/
 #include <iostream>
 #include <stdio.h>
