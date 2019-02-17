@@ -20,23 +20,29 @@ for the opcode inside the nested ifs.
 
 using namespace std;
 
+void VirtualMachine::load(fstream& objectCode,int base, int &limit){ //phase 2 load state for vm
+	for (limit = base; objectCode >> mem[limit]; limit++); //loads objectcode to memory
+}
 int VirtualMachine::get_clock()
 {
 	return clock;
 }
 
-void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
+void VirtualMachine::run(int TimeSlice, fstream& objectCode, fstream& in, fstream& out) //included timeslice
 {
 	const int debug = false;
 	int opcode, rd, i, rs, constant, addr, j;
+//	base = 0;
 
-	base = 0;
-	for (limit = 0; objectCode >> mem[limit]; limit++);
+//phase 2
+	int interrupt = clock + TimeSlice;
+//end phase 2
+//	for (limit = base; objectCode >> mem[limit]; limit++); //moving load state to its own 
 
 	sr = 2;
 	sp = msize;
 	pc = 0;
-	while (pc < limit) {
+	while (pc < base+limit < interrupt) { //added interrupt for timeslice add base value to the addresses in load
 		ir = mem[pc];
 		pc++;
 		opcode = (ir & 0xf800) >> 11;
@@ -61,7 +67,7 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 					out << "Out of bound error.\n";
 					return;
 				}
-				r[rd] = mem[addr];
+				r[rd] = mem[addr + base];
 				clock += 3;
 			}
 			break;
@@ -70,7 +76,7 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 				out << "Out of bound error.\n";
 				return;
 			}
-			mem[addr] = r[rd];
+			mem[addr+base] = r[rd]; // run time add base value to the addresses in load, store, call, and jump instructions.
 			clock += 3;
 			break;
 		case 2: /* add addi */
@@ -256,26 +262,26 @@ void VirtualMachine::run(fstream& objectCode, fstream& in, fstream& out)
 			sr = r[rd];
 			break;
 		case 16: //jump
-			pc = addr;
+			pc = addr+ base;
 			break;
 		case 17: //jumpl
 			if ((sr & 0x8) == 8)      //checks 4th bit on sr
-				pc = addr;
+				pc = addr+base;
 			break;
 		case 18: //jumpe
 			if ((sr & 0x4) == 4)      //checks 3rd bit on sr
-				pc = addr;
+				pc = addr+base;
 			break;
 		case 19: //jumpg
 			if ((sr & 0x2) == 2)      //checks 2nd bit on sr
-				pc = addr;
+				pc = addr+base;
 			break;
 		case 20: //call (sp is decremented by 6 as the values of pc, r[0]-r[3], and sr in the VM are pushed on to stack)
 			mem[--sp] = pc;     //first sp be decremented 
 			for (j = 0; j < 4; j++)
 				mem[--sp] = r[j];   //decrementing from r[0]-r[3]
 			mem[--sp] = sr;         //dec for sr
-			pc = addr;
+			pc = addr + base;
 			clock += 3;         //Each call instructions take 4 clock ticks to execute
 			break;
 		case 21: //return
