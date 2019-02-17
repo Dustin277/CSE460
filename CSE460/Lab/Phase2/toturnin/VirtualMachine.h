@@ -30,8 +30,8 @@ public:
 		mem = vector<int>(msize);
 		r = vector<int>(rsize);
 	}
-	friend class OS;
-	void run(int, fstream&, fstream&);
+	friend class OS; //added os to friend class
+	void run(int, fstream&, fstream&); //changed first parameter to int
 	void load(fstream&, int base, int & limit); //added a load default constructor since added in .cpp
 	int get_clock();
 }; // VirtualMachine
