@@ -32,6 +32,7 @@ public:
 	}
 	friend class OS;
 	void run(int, fstream&, fstream&);
+	void load(fstream&, int base, int & limit); //added a load default constructor since added in .cpp
 	int get_clock();
 }; // VirtualMachine
 
