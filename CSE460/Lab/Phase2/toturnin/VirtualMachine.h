@@ -4,7 +4,7 @@ Jan 28, 2019
 CSE 460
 Kay Zemoudeh
 VirtualMachine.h
-PHASE1
+PHASE2
 
 In this file it contains the size of the memory as the integers being translated
 by the VirtualMachine.cpp file.
@@ -23,7 +23,7 @@ class VirtualMachine {
 	int pc, ir, sr, sp, clock;
 	vector<int> mem;
 	vector<int> r;
-	int base, limit;
+	int base, limit, total_limit;
 public:
 	VirtualMachine() : msize(256), rsize(4), clock(0)
 	{
@@ -33,7 +33,7 @@ public:
 	friend class OS; //added os to friend class
 	void run(int, fstream&, fstream&); //changed first parameter to int
 	void load(fstream&, int base, int & limit); //added a load default constructor since added in .cpp
-	int get_clock();
+	int get_clock();//why is this here
 }; // VirtualMachine
 
 #endif
