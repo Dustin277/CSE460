@@ -124,54 +124,57 @@ void OS::contextSwitch() // (4) switch(vm.ret)
         waitQ.pop();
     }
 
-    int vm_status = (vm.sr >> 5) & 07;//not sure waht is does...
-    switch (vm_status) {
-        case 0: //Time slice
-            readyQ.push(running);
-            running->wait_time_begin = vm.clock;
-            break;
-        case 1: //Halt
-            running->out << running->prog << ": Terminated\n";
-            running->turn_around_time = vm.clock;
-            break;
-        case 2: //Out of Bound Error
-            running->out << running->prog << ": Out of bound Error, pc = " << vm.pc << endl;
-            running->turn_around_time = vm.clock;
-            break;
-        case 3: //Stack Overflow
-            running->out << running->prog << ": Stack overflow, pc = " << vm.pc << ", sp = " << vm.sp << endl;
-            running->turn_around_time = vm.clock;
-            break;
-        case 4: //Stack Underflow
-            running->out << running->prog << ": Stack underflow, pc = " << vm.pc << ", sp = " << vm.sp << endl;
-            running->turn_around_time = vm.clock;
-            break;
-        case 5: //Bad Opcode
-            running->out << running->prog << ": Bad opcode, pc = " << vm.pc << endl; 
-            running->turn_around_time = vm.clock;
-            break;
-        case 6: //Read
-        case 7: //Write
-            waitQ.push(running);
-            running->io_completion = vm.clock + 27;
-            running->io_time_begin = vm.clock;
-            break;
-        default:
-            cerr << running->prog << ": Unexpected status = " << vm_status 
-                 << " pc = " << vm.pc << " time = " << vm.clock << endl;
-            running->out << running->prog << ": Unexpected status: " << vm_status 
-                 << " pc = " << vm.pc << " time = " << vm.clock << endl;
-            running->turn_around_time = vm.clock;
-    }
+    iint vmsr = (vm.sr >> 5);//vm return status register at bit 5:7
 
-    saveState();
-    running = 0;
-    if (not readyQ.empty()) {
+	if(vmsr == 0){ //Time slice
+		readyQ.push(running); //since timeslice met, place running prog inside readyyQ
+		running->wait_time_begin = vm.clock; //set wait time
+	}
+	else if(vmsr == 1){
+		running->out << running->prog << "Terminated"; //output error
+		running->turn_around_time = vm.clock; //set turn around time for all errors
+	}    
+	else if(vmsr == 2){
+		running->out << running->prog << "Out of bound Error";
+		running->turn_around_time = vm.clock;
+	}
+	else if(vmsr == 3){ //Stack Overflow
+		running->out << running->prog << "Stack overflow";
+		running->turn_around_time = vm.clock;
+	}
+	else if(vmsr == 4){ //Stack Underflow
+		running->out << running->prog << "Stack underflow";
+		running->turn_around_time = vm.clock;
+	}
+	else if(vmsr == 5){ //Bad Opcode
+		running->out << running->prog << "Bad opcode"; 
+		running->turn_around_time = vm.clock;
+	}
+	else if(vmsr == 6){ //Read
+	}
+	else if(vmsr == 7){//Write
+	}
+	else{
+		running->out << running->prog << ": Unexpected status"; 
+		running->turn_around_time = vm.clock;
+	}
+
+    saveState(); //need to save the state of the program
+
+	/*1st if there is something in the readyQ move whats in front of readyQ
+	  to running then set wait time, remove front of readyQ since now in
+	  running
+	*/
+    if (readyQ.empty()==false) { 
         running = readyQ.front();
         running->wait_time += (vm.clock - running->wait_time_begin);
         readyQ.pop();
     } 
-    else if (not waitQ.empty()){
+	/*2nd if there is something in the waitQ and not the readyQ place whats in
+	  front of waitQ into running then remove it with .pop. set idle_time, clock
+	  and io_time
+	*/
+    else if (waitQ.empty()==false){
         running = waitQ.front();
         waitQ.pop();
         idle_time += (running->io_completion - vm.clock);
