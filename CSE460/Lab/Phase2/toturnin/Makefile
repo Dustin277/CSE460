@@ -1,9 +1,12 @@
 # note every second line must start with a Tab character
 
-os: os.o VirtualMachine.o Assembler.o
-	g++ -o os os.o VirtualMachine.o Assembler.o
+os: os_main.o os.o VirtualMachine.o Assembler.o
+	g++ -o os os_main.o os.o VirtualMachine.o Assembler.o
 
-os.o: os.cpp
+os_main.o: os_main.cpp
+	g++ -c os_main.cpp
+
+os.o: os.cpp OS.h
 	g++ -c os.cpp
 
 VirtualMachine.o: VirtualMachine.cpp VirtualMachine.h
@@ -13,7 +16,7 @@ Assembler.o: Assembler.cpp Assembler.h
 	g++ -c Assembler.cpp
 
 clean:
-	rm Assembler.o VirtualMachine.o os.o os
+	rm Assembler.o VirtualMachine.o os.o os_main.o os
 
 
 
